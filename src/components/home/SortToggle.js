@@ -1,11 +1,32 @@
 import React, { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+// import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 
 function SortToggle() {
-  const [sortType, setSortType] = useState("인기순");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [sortType, setSortType] = useState(
+    searchParams.get("sortType") === "popular" ? "인기순" : "최신 순"
+  );
+  const navigate = useNavigate();
+  // const setPageNum = useSetRecoilState(pageNumAtom);
+  const handleSortChange = (event) => {
+    const selectedSortType = event.target.value;
+    setSortType(selectedSortType);
+    if (selectedSortType === "인기순") {
+      navigate("/?sortType=popular");
+    } else if (selectedSortType === "최신 순") {
+      navigate("/?sortType=latest");
+    }
+    // setPageNum(1);
+  };
   return (
     <>
-      <StyledSelect>
+      <StyledSelect
+        onChange={handleSortChange}
+        value={sortType}
+        name="정렬 타입"
+      >
         <option>인기순</option>
         <option>최신 순</option>
       </StyledSelect>
